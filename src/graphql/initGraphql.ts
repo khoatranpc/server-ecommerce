@@ -24,6 +24,7 @@ const initGraphQlOptions = (...modules: IModuleOptions): ApolloServerOptions<any
         };
     });
     if (!Object.keys(resolvers.Mutation).length) delete resolvers.Mutation;
+    if (!Object.keys(resolvers.Query).length) delete resolvers.Query;
     return {
         typeDefs,
         resolvers,

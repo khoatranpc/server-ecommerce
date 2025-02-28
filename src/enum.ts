@@ -1,15 +1,20 @@
 export enum Collections {
-    users = 'users'
+  users = "users",
 }
 
-
 export enum OperationStatus {
-    active = 'active',
-    inactive = 'inactive',
+  active = "active",
+  inactive = "inactive",
 }
 
 export enum Status {
-    active = 'active',
-    inactive = 'inactive',
-    deleted = 'deleted'
+  active = "active",
+  inactive = "inactive",
+  deleted = "deleted",
+}
+
+export enum Role {
+  admin = "admin",
+  shop = "shop",
+  customer = "customer",
 }
