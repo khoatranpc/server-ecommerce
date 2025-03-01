@@ -1,4 +1,4 @@
-import { GraphQLError } from "graphql";
+import { GraphQLError, GraphQLTypeResolver } from "graphql";
 import UserModel from "../../models/users";
 import { IInput, IModules, IObj } from "../../types";
 import {
@@ -108,7 +108,8 @@ const userModule = (): IModules => {
       Query: {
         [operationsGraphql.getCurrentUser.name]: async (
           _,
-          { input }: IInput<GetCurrentUserInput>
+          { input }: IInput<GetCurrentUserInput>,
+          context
         ) => {
           const payload: GetCurrentUserInput = {
             ...input,

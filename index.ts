@@ -7,6 +7,7 @@ import exampleModule from "./src/graphql/modules/exampleModule";
 import userModule from "./src/graphql/modules/userModule";
 import { config } from "dotenv";
 import mongoose from "mongoose";
+import { jwtUtils } from "./src/utils";
 config();
 
 const mongo_uri = process.env.MONGO_URI;
@@ -25,7 +26,18 @@ app.use(express.json()),
     (req, res, next) => {
       return next();
     },
-    expressMiddleware(server)
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        const access_token = req.headers.authorization?.replace("Bearer ", "");
+        if (access_token) {
+          const verifiedToken = jwtUtils.verifyAccessToken(access_token);
+          return {
+            verifiedToken,
+          };
+        }
+        return {};
+      },
+    })
   );
 app.listen(4000, () => {
   console.log(`Server is running ${4000}`);

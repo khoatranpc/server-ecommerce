@@ -10,6 +10,7 @@ export enum OperationStatus {
 export enum Status {
   active = "active",
   inactive = "inactive",
+  pending = "pending",
   deleted = "deleted",
 }
 
