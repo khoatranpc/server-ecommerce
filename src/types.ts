@@ -1,3 +1,5 @@
+import { Role } from "./enum";
+
 export interface IResponsePaginated<T> {
   data: T;
   page: number;
@@ -18,4 +20,11 @@ export interface IModules {
 
 export interface IInput<T> {
   input: T;
+}
+
+export interface IContextGraphQlValue {
+  verifiedToken: {
+    _id: string;
+    role: Role;
+  };
 }

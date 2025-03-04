@@ -1,5 +1,6 @@
 export enum Collections {
   users = "users",
+  shops = "shops",
 }
 
 export enum OperationStatus {
@@ -18,4 +19,10 @@ export enum Role {
   admin = "admin",
   shop = "shop",
   customer = "customer",
+}
+
+export enum ServicePackage {
+  trial = "trial",
+  basic = "basic",
+  medium = "premium",
 }

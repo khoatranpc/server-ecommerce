@@ -1,8 +1,9 @@
-import { OperationStatus } from "./enum";
+import { OperationStatus, Role } from "./enum";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import { GraphQLError } from "graphql";
+import { IContextGraphQlValue } from "./types";
 config();
 
 export const operationsGraphql = {
@@ -20,6 +21,18 @@ export const operationsGraphql = {
   },
   getCurrentUser: {
     name: "getCurrentUser",
+    status: OperationStatus.active,
+  },
+  getShopByOwnerId: {
+    name: "getShopByOwnerId",
+    status: OperationStatus.active,
+  },
+  updateShopInfo: {
+    name: "getShopByOwnerId",
+    status: OperationStatus.active,
+  },
+  createShopInfo: {
+    name: "createShopInfo",
     status: OperationStatus.active,
   },
 };
@@ -84,4 +97,12 @@ export const jwtUtils = {
     }
     return jwtUtils.generateAccessToken(payload);
   },
+};
+
+export const checkRole = (
+  role: Role[],
+  contextGraphQl: IContextGraphQlValue
+) => {
+  if (!role.includes(contextGraphQl.verifiedToken.role))
+    throw new GraphQLError("Permission denied!");
 };

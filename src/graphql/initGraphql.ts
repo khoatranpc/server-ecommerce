@@ -7,6 +7,24 @@ type IModuleOptions = IModules[]
 
 const initGraphQlOptions = (...modules: IModuleOptions): ApolloServerOptions<any> => {
     let typeDefs = `#graphql
+        type Address {
+            province: Int
+            district: Int
+            ward: Int
+            detail: String
+        }
+        input AddressInput {
+            province: Int
+            district: Int
+            ward: Int
+            detail: String
+        }
+
+        enum ServicePackage {
+            trial
+            premium
+            basic
+        }
     `;
     const resolvers: IObj = {
         Query: {},
