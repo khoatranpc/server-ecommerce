@@ -7,6 +7,18 @@ type IModuleOptions = IModules[]
 
 const initGraphQlOptions = (...modules: IModuleOptions): ApolloServerOptions<any> => {
     let typeDefs = `#graphql
+        scalar Any
+
+        input PaginateInput {
+            page: Int
+            limit: Int
+        }
+        type Paginated {
+            page: Int
+            total: Float
+            pages: Int
+            limit: Int
+        }
         type Address {
             province: Int
             district: Int
@@ -24,6 +36,13 @@ const initGraphQlOptions = (...modules: IModuleOptions): ApolloServerOptions<any
             trial
             premium
             basic
+        }
+
+        enum Status {
+            active
+            inactive
+            pending
+            deleted
         }
     `;
     const resolvers: IObj = {

@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import multer from "multer";
 import { jwtUtils } from "./src/utils";
 import shopModule from "./src/graphql/modules/shopModule";
+import categoryModule from "./src/graphql/modules/categoryModule";
 config();
 
 const mongo_uri = process.env.MONGO_URI;
@@ -23,7 +24,12 @@ app.use(
   })
 );
 const server = new ApolloServer({
-  ...initGraphQlOptions(exampleModule(), userModule(), shopModule()),
+  ...initGraphQlOptions(
+    exampleModule(),
+    userModule(),
+    shopModule(),
+    categoryModule()
+  ),
 });
 
 await server.start();

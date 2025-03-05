@@ -1,4 +1,5 @@
-import { ServicePackage } from "./enum";
+import { ServicePackage, Status } from "./enum";
+import { IPaginateQuery } from "./types";
 
 export interface UserRegisterInput {
   name: string;
@@ -41,4 +42,28 @@ export interface SaveShopInfoInput {
   tiktok: String;
   youtube: string;
   servicePackage: ServicePackage;
+}
+export interface GetCategoriesInput {
+  _id: string[];
+  slug: string[];
+  status: Status[];
+  shop: string[];
+  createdBy: string[];
+  updatedBy: string[];
+  keyword: string;
+}
+
+export interface FilterCategoriesInput {
+  filter: GetCategoriesInput;
+  paginate: IPaginateQuery;
+}
+
+export interface CreateCategoryInput {
+  name: string;
+  description?: string;
+  slug: string;
+  parentCategory?: string;
+  status: Status;
+  imageUrl?: string;
+  shop: string;
 }

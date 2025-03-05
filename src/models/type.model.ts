@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Role, ServicePackage, Status } from "../enum";
 
 export interface IUser {
@@ -25,6 +26,7 @@ export interface IAddress {
   detail: string;
 }
 export interface IShop {
+  _id: string;
   address: IAddress;
   description: string;
   email: string;
@@ -37,4 +39,19 @@ export interface IShop {
   youtube: string;
   servicePackage: ServicePackage;
   owner: IUser | string;
+}
+
+export interface ICategory {
+  _id: string;
+  name: string;
+  description?: string;
+  slug?: string;
+  parentCategory?: Types.ObjectId | null | this;
+  status: Status;
+  imageUrl?: string;
+  createdBy?: Types.ObjectId | IUser | null | any;
+  updatedBy?: Types.ObjectId | IUser | null | any;
+  shop?: Types.ObjectId | IUser | null | any;
+  createdAt: Date;
+  updatedAt: Date;
 }
