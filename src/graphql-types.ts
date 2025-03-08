@@ -88,3 +88,16 @@ export interface CreateProductInput {
   sku: string;
   stock: number;
 }
+
+export interface IProductFilterInput {
+  name: String;
+  categories: [String];
+  status: [Status];
+  shop: [String];
+  sku: String;
+  keywords: String;
+}
+export interface IGetProductsInput {
+  filter: IProductFilterInput;
+  paginate: IPaginateQuery;
+}

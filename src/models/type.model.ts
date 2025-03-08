@@ -76,7 +76,7 @@ export interface IProduct {
   description?: string;
   price: number;
   images?: string[];
-  category: Types.ObjectId[];
+  categories: Types.ObjectId[];
   status?: Status;
   slug: string;
   variants?: IVariant[];

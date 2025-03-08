@@ -73,7 +73,7 @@ const productSchema = new Schema<IProduct>(
       required: true,
       unique: true,
     },
-    category: [
+    categories: [
       {
         type: Schema.Types.ObjectId,
         ref: Collections.categories,
