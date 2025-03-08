@@ -2,39 +2,43 @@ import mongoose, { Schema } from "mongoose";
 import { Collections, Status } from "../enum";
 import { IProduct, IVariant } from "./type.model";
 
-const variantSchema = new Schema<IVariant>({
-  name: {
-    type: String,
-    required: true,
+const variantSchema = new Schema<IVariant>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    stock: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+    attributes: [
+      {
+        key: String,
+        value: String,
+      },
+    ],
+    sku: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    image: String,
+    status: {
+      type: String,
+      enum: Object.values(Status),
+      default: Status.active,
+    },
   },
-  price: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  stock: {
-    type: Number,
-    required: true,
-    min: 0,
-    default: 0,
-  },
-  attributes: {
-    type: Map,
-    of: String,
-    required: true,
-  },
-  sku: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  images: String,
-  status: {
-    type: String,
-    enum: Object.values(Status),
-    default: Status.active,
-  },
-});
+  { timestamps: true }
+);
 
 const productSchema = new Schema<IProduct>(
   {
@@ -51,6 +55,13 @@ const productSchema = new Schema<IProduct>(
       type: Number,
       required: true,
       min: 0,
+      default: 0,
+    },
+    stock: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
     },
     images: [
       {
@@ -62,11 +73,13 @@ const productSchema = new Schema<IProduct>(
       required: true,
       unique: true,
     },
-    category: {
-      type: Schema.Types.ObjectId,
-      ref: Collections.categories,
-      required: true,
-    },
+    category: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: Collections.categories,
+        required: true,
+      },
+    ],
     status: {
       type: String,
       enum: Object.values(Status),
@@ -91,6 +104,10 @@ const productSchema = new Schema<IProduct>(
       type: Schema.Types.ObjectId,
       ref: Collections.shops,
       required: true,
+    },
+    keywords: {
+      type: String,
+      trim: true,
     },
   },
   {

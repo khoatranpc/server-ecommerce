@@ -12,6 +12,7 @@ import multer from "multer";
 import { jwtUtils } from "./src/utils";
 import shopModule from "./src/graphql/modules/shopModule";
 import categoryModule from "./src/graphql/modules/categoryModule";
+import productModule from "./src/graphql/modules/productModule";
 config();
 
 const mongo_uri = process.env.MONGO_URI;
@@ -28,7 +29,8 @@ const server = new ApolloServer({
     exampleModule(),
     userModule(),
     shopModule(),
-    categoryModule()
+    categoryModule(),
+    productModule()
   ),
 });
 

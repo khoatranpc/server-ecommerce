@@ -43,6 +43,10 @@ export const operationsGraphql = {
     name: "createCategory",
     status: OperationStatus.active,
   },
+  createProduct: {
+    name: "createProduct",
+    status: OperationStatus.active,
+  },
 };
 
 export const hashPassword = (password: string): string => {

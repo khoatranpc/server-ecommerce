@@ -1,5 +1,5 @@
 import { ServicePackage, Status } from "./enum";
-import { IPaginateQuery } from "./types";
+import { IObj, IPaginateQuery } from "./types";
 
 export interface UserRegisterInput {
   name: string;
@@ -67,5 +67,24 @@ export interface CreateCategoryInput {
   imageUrl?: string;
   shop: string;
 }
-
-// export interface 
+export interface CreateVariantProductInput {
+  name: string;
+  price: number;
+  stock: number;
+  attributes: IObj[];
+  sku: string;
+  images: string;
+  status: Status;
+}
+export interface CreateProductInput {
+  name: string;
+  description: string;
+  price: number;
+  images: string[];
+  categories: string[];
+  status: Status;
+  variants: CreateVariantProductInput[];
+  shop: string;
+  sku: string;
+  stock: number;
+}

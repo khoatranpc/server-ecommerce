@@ -57,12 +57,16 @@ export interface ICategory {
 }
 
 export interface IVariant {
+  _id?: string;
   name: string;
   price: number;
   stock?: number;
-  attributes: Map<string, string>;
+  attributes: {
+    key: string;
+    value: string;
+  }[];
   sku: string;
-  images?: string;
+  image?: string;
   status?: Status;
 }
 
@@ -72,7 +76,7 @@ export interface IProduct {
   description?: string;
   price: number;
   images?: string[];
-  category: Types.ObjectId;
+  category: Types.ObjectId[];
   status?: Status;
   slug: string;
   variants?: IVariant[];
@@ -82,4 +86,6 @@ export interface IProduct {
   createdAt?: Date;
   sku: string;
   updatedAt?: Date;
+  keywords?: string;
+  stock: number;
 }
