@@ -24,7 +24,7 @@ const productModule = (): IModules => {
         stock: Int
         attributes: [Attribute!]!
         sku: String!
-        images: String
+        image: String
         status: Status
     }
     type Product {
@@ -43,6 +43,7 @@ const productModule = (): IModules => {
         createdAt: Float
         updatedAt: Float
         sku: String
+        stock: Int
     }
 
     input AttributeInput {
@@ -100,6 +101,7 @@ const productModule = (): IModules => {
         createdAt: Float
         updatedAt: Float
         sku: String
+        stock: String
     }
     type Products {
       data: [ProductResponse]
@@ -109,7 +111,7 @@ const productModule = (): IModules => {
         ${operationsGraphql.createProduct.name}(input: CreateProductInput): Product
     }
     type Query {
-        ${operationsGraphql.getProducts.name}(input: CreateProductInput): Products
+        ${operationsGraphql.getProducts.name}(input: GetProductsInput): Products
     }
 `,
     resolvers: {
@@ -153,7 +155,6 @@ const productModule = (): IModules => {
           if (filter.keywords) {
             query.$or = [
               { name: { $regex: filter.keywords, $options: "i" } },
-              { description: { $regex: filter.keywords, $options: "i" } },
               { slug: { $regex: filter.keywords, $options: "i" } },
             ];
           }
