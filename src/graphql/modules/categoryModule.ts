@@ -46,10 +46,10 @@ const categoryModule = (): IModules => {
             name: String!
             description: String
             slug: String!
-            parentCategory: ID
+            parentCategory: String
             status: Status
             imageUrl: String
-            shop: ID!
+            shop: String!
         }
 
         type DataCategoriesFiltered {
@@ -87,9 +87,9 @@ const categoryModule = (): IModules => {
             query.updatedBy = { $in: filter.updatedBy };
           if (filter.keyword) {
             query.$or = [
-              { name: { $regex: filter.keyword, $options: 'i' } },
-              { description: { $regex: filter.keyword, $options: 'i' } },
-              { slug: { $regex: filter.keyword, $options: 'i' } }
+              { name: { $regex: filter.keyword, $options: "i" } },
+              { description: { $regex: filter.keyword, $options: "i" } },
+              { slug: { $regex: filter.keyword, $options: "i" } },
             ];
           }
 
@@ -127,7 +127,11 @@ const categoryModule = (): IModules => {
           if (![Role.admin, Role.shop].includes(context.verifiedToken.role)) {
             throw new GraphQLError("Permission denied!");
           }
-          const createdCategory = await CategoryModel.create(payload);
+          const createdCategory = await CategoryModel.create({
+            ...payload,
+            createdBy: context.verifiedToken._id,
+            updatedBy: context.verifiedToken._id,
+          });
           return createdCategory;
         },
       },

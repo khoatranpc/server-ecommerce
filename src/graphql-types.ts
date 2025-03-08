@@ -67,3 +67,5 @@ export interface CreateCategoryInput {
   imageUrl?: string;
   shop: string;
 }
+
+// export interface 

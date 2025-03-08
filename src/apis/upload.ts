@@ -52,18 +52,21 @@ const uploadController = {
       }
 
       const files = Array.isArray(req.files) ? req.files : [req.files];
-      const uploadPromises = files.map((file: any) =>
-        cloudinary.uploader.upload(file.path, {
+      const uploadPromises = files.map((file: any) => {
+        const fileBase64 = `data:${file.mimetype};base64,${file.buffer.toString(
+          "base64"
+        )}`;
+
+        return cloudinary.uploader.upload(fileBase64, {
           folder: "ecommerce-dev",
-        })
-      );
+        });
+      });
 
       const results = await Promise.all(uploadPromises);
       const uploadedFiles = results.map((result) => ({
         url: result.secure_url,
         public_id: result.public_id,
       }));
-
       res.status(200).json({
         success: true,
         files: uploadedFiles,

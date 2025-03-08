@@ -2,6 +2,7 @@ export enum Collections {
   users = "users",
   shops = "shops",
   categories = "categories",
+  products = "products",
 }
 
 export enum OperationStatus {

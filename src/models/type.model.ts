@@ -55,3 +55,31 @@ export interface ICategory {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IVariant {
+  name: string;
+  price: number;
+  stock?: number;
+  attributes: Map<string, string>;
+  sku: string;
+  images?: string;
+  status?: Status;
+}
+
+export interface IProduct {
+  _id?: Types.ObjectId;
+  name: string;
+  description?: string;
+  price: number;
+  images?: string[];
+  category: Types.ObjectId;
+  status?: Status;
+  slug: string;
+  variants?: IVariant[];
+  createdBy: Types.ObjectId;
+  updatedBy?: Types.ObjectId;
+  shop: Types.ObjectId;
+  createdAt?: Date;
+  sku: string;
+  updatedAt?: Date;
+}
