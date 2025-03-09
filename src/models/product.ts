@@ -30,7 +30,7 @@ const variantSchema = new Schema<IVariant>(
       required: true,
       unique: true,
     },
-    image: String,
+    imageIndex: Number,
     status: {
       type: String,
       enum: Object.values(Status),
@@ -72,6 +72,7 @@ const productSchema = new Schema<IProduct>(
       type: String,
       required: true,
       unique: true,
+      index: true,
     },
     categories: [
       {
@@ -89,6 +90,7 @@ const productSchema = new Schema<IProduct>(
       type: String,
       required: true,
       unique: true,
+      index: true,
     },
     variants: [variantSchema],
     createdBy: {

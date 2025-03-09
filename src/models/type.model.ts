@@ -66,7 +66,7 @@ export interface IVariant {
     value: string;
   }[];
   sku: string;
-  image?: string;
+  imageIndex?: number;
   status?: Status;
 }
 

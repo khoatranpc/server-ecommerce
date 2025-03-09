@@ -51,6 +51,14 @@ export const operationsGraphql = {
     name: "getProducts",
     status: OperationStatus.active,
   },
+  getProductBySlug: {
+    name: "getProductBySlug",
+    status: OperationStatus.active,
+  },
+  updateProductById: {
+    name: "updateProductById",
+    status: OperationStatus.active,
+  },
 };
 
 export const hashPassword = (password: string): string => {
@@ -117,8 +125,9 @@ export const jwtUtils = {
 
 export const checkRole = (
   role: Role[],
-  contextGraphQl: IContextGraphQlValue
+  contextGraphQl: IContextGraphQlValue,
+  customMessage?: string
 ) => {
   if (!role.includes(contextGraphQl.verifiedToken.role))
-    throw new GraphQLError("Permission denied!");
+    throw new GraphQLError(customMessage ?? "Permission denied!");
 };

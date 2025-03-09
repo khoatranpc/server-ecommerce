@@ -73,7 +73,7 @@ export interface CreateVariantProductInput {
   stock: number;
   attributes: IObj[];
   sku: string;
-  images: string;
+  imageIndex: number;
   status: Status;
 }
 export interface CreateProductInput {
@@ -101,4 +101,13 @@ export interface IProductFilterInput {
 export interface IGetProductsInput {
   filter: IProductFilterInput;
   paginate: IPaginateQuery;
+}
+
+export interface IGetProductBySlugInput {
+  slug: string;
+}
+
+export interface IUpdateProductInput {
+  _id: string;
+  data: CreateProductInput;
 }

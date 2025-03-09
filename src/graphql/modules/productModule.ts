@@ -1,14 +1,17 @@
 import { GraphQLError } from "graphql";
-import { Role } from "../../enum";
+import { Role, Status } from "../../enum";
 import {
   CreateProductInput,
+  IGetProductBySlugInput,
   IGetProductsInput,
   IProductFilterInput,
+  IUpdateProductInput,
 } from "../../graphql-types";
-import { operationsGraphql } from "../../utils";
+import { checkRole, operationsGraphql } from "../../utils";
 import { IContextGraphQlValue, IInput, IModules, IObj } from "./../../types";
 import ProductModel from "../../models/product";
 import slugify from "slugify";
+import mongoose from "mongoose";
 const productModule = (): IModules => {
   return {
     typeDefs: `#graphql
@@ -24,7 +27,7 @@ const productModule = (): IModules => {
         stock: Int
         attributes: [Attribute!]!
         sku: String!
-        image: String
+        imageIndex: Int
         status: Status
     }
     type Product {
@@ -33,7 +36,7 @@ const productModule = (): IModules => {
         description: String
         price: Float!
         images: [String]
-        category: ID!
+        categories: [Category]
         status: Status
         slug: String
         variants: [Variant]
@@ -52,16 +55,18 @@ const productModule = (): IModules => {
     }
 
     input VariantInput {
+        _id: String
         name: String!
         price: Float!
         stock: Int
         attributes: [AttributeInput!]!
         sku: String!
-        image: String
+        imageIndex: Int
         status: Status
     }
  
     input CreateProductInput {
+        _id: String
         name: String!
         description: String
         price: Float!
@@ -72,6 +77,8 @@ const productModule = (): IModules => {
         shop: ID!
         sku: String!
         keywords: String
+        stock: Int
+        updatedBy: String
     }
     input ProductFilterInput {
       name: String
@@ -86,13 +93,23 @@ const productModule = (): IModules => {
       filter: ProductFilterInput
       paginate: PaginateInput
     }
+
+    input GetProductBySlugInput {
+      slug: String!
+    }
+
+    input UpdateProductInput {
+      _id: String!
+      data: CreateProductInput
+    }
+
     type ProductResponse {
         _id: ID!
         name: String!
         description: String
         price: Float!
         images: [String]
-        category: ID!
+        categories: [Category]
         status: Status
         slug: String
         variants: [Variant]
@@ -102,7 +119,7 @@ const productModule = (): IModules => {
         createdAt: Float
         updatedAt: Float
         sku: String
-        stock: String
+        stock: Int
     }
     type Products {
       data: [ProductResponse]
@@ -110,9 +127,11 @@ const productModule = (): IModules => {
     }
     type Mutation {
         ${operationsGraphql.createProduct.name}(input: CreateProductInput): Product
+        ${operationsGraphql.updateProductById.name}(input: UpdateProductInput): Product
     }
     type Query {
         ${operationsGraphql.getProducts.name}(input: GetProductsInput): Products
+        ${operationsGraphql.getProductBySlug.name}(input: GetProductBySlugInput): ProductResponse
     }
 `,
     resolvers: {
@@ -137,6 +156,35 @@ const productModule = (): IModules => {
           });
           return createdProduct;
         },
+        [operationsGraphql.updateProductById.name]: async (
+          _,
+          { input }: IInput<IUpdateProductInput>,
+          context: IContextGraphQlValue
+        ) => {
+          const payload = {
+            ...input,
+          };
+          checkRole([Role.admin, Role.shop], context);
+          if (context.verifiedToken.role === Role.shop) {
+            const currentProduct = await ProductModel.findOne({
+              _id: payload._id,
+              createdBy: context.verifiedToken._id,
+            });
+            if (!currentProduct) throw new GraphQLError("Permission denied!");
+          }
+          delete (payload.data as IObj)._id;
+          const saveProduct = await ProductModel.findByIdAndUpdate(
+            payload._id,
+            {
+              ...payload.data,
+              updatedBy: context.verifiedToken._id,
+            },
+            {
+              new: true,
+            }
+          );
+          return saveProduct;
+        },
       },
       Query: {
         [operationsGraphql.getProducts.name]: async (
@@ -153,6 +201,8 @@ const productModule = (): IModules => {
 
           if (filter.status?.length) {
             query.$and.push({ status: { $in: filter.status } });
+          } else {
+            query.$and.push({ status: { $in: [Status.active] } });
           }
 
           if (filter.shop?.length) {
@@ -233,6 +283,44 @@ const productModule = (): IModules => {
               pages: Math.ceil(total / limit),
             },
           };
+        },
+        [operationsGraphql.getProductBySlug.name]: async (
+          _,
+          { input }: IInput<IGetProductBySlugInput>,
+          context: IContextGraphQlValue
+        ) => {
+          const payload = { ...input };
+
+          const query = mongoose.Types.ObjectId.isValid(payload.slug)
+            ? { _id: payload.slug }
+            : { slug: payload.slug };
+
+          const currentProduct = await ProductModel.findOne(query)
+            .populate("categories")
+            .populate("createdBy")
+            .populate("updatedBy")
+            .populate({
+              path: "shop",
+              populate: {
+                path: "owner",
+              },
+            })
+            .lean();
+          if (
+            currentProduct &&
+            [Status.deleted, Status.inactive, Status.pending].includes(
+              currentProduct.status
+            )
+          ) {
+            checkRole(
+              [Role.admin, Role.shop],
+              context,
+              "Sản phẩm hiện không khả dụng!"
+            );
+          }
+          if (!currentProduct)
+            throw new GraphQLError("Không tìm thấy thông tin sản phẩm!");
+          return currentProduct;
         },
       },
     },
