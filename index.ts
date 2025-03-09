@@ -20,12 +20,7 @@ await mongoose.connect(mongo_uri);
 
 const app = express();
 app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://ecommerce-omega-lac-89.vercel.app/",
-    ],
-  })
+  cors()
 );
 const server = new ApolloServer({
   ...initGraphQlOptions(
