@@ -96,6 +96,7 @@ export interface IProductFilterInput {
   shop: [String];
   sku: String;
   keywords: String;
+  price: String;
 }
 export interface IGetProductsInput {
   filter: IProductFilterInput;

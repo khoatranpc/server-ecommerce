@@ -6,7 +6,7 @@ import {
   IProductFilterInput,
 } from "../../graphql-types";
 import { operationsGraphql } from "../../utils";
-import { IContextGraphQlValue, IInput, IModules } from "./../../types";
+import { IContextGraphQlValue, IInput, IModules, IObj } from "./../../types";
 import ProductModel from "../../models/product";
 import slugify from "slugify";
 const productModule = (): IModules => {
@@ -80,6 +80,7 @@ const productModule = (): IModules => {
       shop: [String]
       sku: String
       keywords: String
+      price: String
     }
     input GetProductsInput {
       filter: ProductFilterInput
@@ -146,20 +147,64 @@ const productModule = (): IModules => {
             filter = {} as IProductFilterInput,
             paginate = { page: 1, limit: 10 },
           } = input || {};
+
           const { page = 1, limit = 10 } = paginate;
-          const query: any = {};
-          if (filter.status?.length) query.status = { $in: filter.status };
-          if (filter.shop?.length) query.shop = { $in: filter.shop };
-          if (filter.categories?.length)
-            query.shop = { $in: filter.categories };
-          if (filter.keywords) {
-            query.$or = [
-              { name: { $regex: filter.keywords, $options: "i" } },
-              { slug: { $regex: filter.keywords, $options: "i" } },
-            ];
+          const query: any = { $and: [] };
+
+          if (filter.status?.length) {
+            query.$and.push({ status: { $in: filter.status } });
           }
-          if (filter.sku) {
-            query.$or = [{ name: { $regex: filter.sku, $options: "i" } }];
+
+          if (filter.shop?.length) {
+            query.$and.push({ shop: { $in: filter.shop } });
+          }
+
+          if (filter.categories?.length) {
+            query.$and.push({ categories: { $in: filter.categories } });
+          }
+
+          if (filter.keywords && typeof filter.keywords === "string") {
+            const sanitizedKeywords = filter.keywords.trim();
+            if (sanitizedKeywords.length > 0) {
+              const regex = new RegExp(`\\b${sanitizedKeywords}`, "i");
+              query.$and.push({
+                $or: [
+                  { name: { $regex: regex } },
+                  { slug: { $regex: regex } },
+                  { keywords: { $regex: regex } },
+                ],
+              });
+            }
+          }
+          if (filter.sku && typeof filter.sku === "string") {
+            const sanitizedSku = filter.sku.trim();
+            if (sanitizedSku.length > 0) {
+              query.$and.push({
+                sku: { $regex: new RegExp(sanitizedSku, "i") },
+              });
+            }
+          }
+
+          if (filter.price) {
+            const [minPrice, maxPrice] = filter.price.split(",").map(Number);
+            const priceFilter: any = {};
+
+            if (!isNaN(minPrice)) priceFilter.$gte = minPrice;
+            if (
+              !isNaN(maxPrice) &&
+              (!isNaN(minPrice) ? maxPrice >= minPrice : true)
+            ) {
+              priceFilter.$lte = maxPrice;
+            }
+
+            if (Object.keys(priceFilter).length) {
+              query.$and.push({
+                $or: [
+                  { price: priceFilter },
+                  { variants: { $elemMatch: { price: priceFilter } } },
+                ],
+              });
+            }
           }
 
           const skip = (page - 1) * limit;
