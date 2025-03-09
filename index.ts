@@ -1,7 +1,7 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import cors from "cors";
-import express from "express";
+import express, { Request, Response } from "express";
 import uploadController from "./src/apis/upload";
 import initGraphQlOptions from "./src/graphql/initGraphql";
 import exampleModule from "./src/graphql/modules/exampleModule";
@@ -39,6 +39,11 @@ app.use(express.json());
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+app.get("", (req: Request, res: Response) => {
+  res.send({
+    message: "Khoatranpc603",
+  });
+});
 app.post(
   "/upload/single",
   upload.single("file"),
