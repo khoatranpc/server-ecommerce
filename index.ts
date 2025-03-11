@@ -13,22 +13,22 @@ import { jwtUtils } from "./src/utils";
 import shopModule from "./src/graphql/modules/shopModule";
 import categoryModule from "./src/graphql/modules/categoryModule";
 import productModule from "./src/graphql/modules/productModule";
+import postModule from "./src/graphql/modules/postModule";
 config();
 
 const mongo_uri = process.env.MONGO_URI;
 await mongoose.connect(mongo_uri);
 
 const app = express();
-app.use(
-  cors()
-);
+app.use(cors());
 const server = new ApolloServer({
   ...initGraphQlOptions(
     exampleModule(),
     userModule(),
     shopModule(),
     categoryModule(),
-    productModule()
+    productModule(),
+    postModule()
   ),
 });
 

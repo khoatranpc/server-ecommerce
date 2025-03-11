@@ -111,3 +111,19 @@ export interface IUpdateProductInput {
   _id: string;
   data: CreateProductInput;
 }
+
+export interface IGetOneProductInput {
+  value: string;
+}
+
+export interface ICreateAPostInput {
+  title: String;
+  description: String;
+  author: String;
+  tags: [String];
+  categories: [String];
+  images: [String];
+  product: String;
+  banner: String;
+  status: String;
+}

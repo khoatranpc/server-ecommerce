@@ -3,6 +3,8 @@ export enum Collections {
   shops = "shops",
   categories = "categories",
   products = "products",
+  posts = "posts",
+  comments = "comments",
 }
 
 export enum OperationStatus {

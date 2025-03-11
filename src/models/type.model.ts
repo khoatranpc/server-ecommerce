@@ -89,3 +89,32 @@ export interface IProduct {
   keywords?: string;
   stock: number;
 }
+
+export interface IPost {
+  _id?: Types.ObjectId;
+  title: string;
+  slug: string;
+  description: string;
+  content: string;
+  author: Types.ObjectId;
+  tags?: string[];
+  categories?: Types.ObjectId[];
+  images?: string[];
+  product?: Types.ObjectId;
+  banner?: string;
+  status?: Status;
+  views?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IComment {
+  _id?: Types.ObjectId;
+  post: Types.ObjectId;
+  user: Types.ObjectId;
+  content: string;
+  likes?: Types.ObjectId[];
+  replies?: Types.ObjectId[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}

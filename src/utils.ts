@@ -59,6 +59,14 @@ export const operationsGraphql = {
     name: "updateProductById",
     status: OperationStatus.active,
   },
+  getOnePost: {
+    name: "getOnePost",
+    status: OperationStatus.active,
+  },
+  createAPost: {
+    name: "createAPost",
+    status: OperationStatus.active,
+  },
 };
 
 export const hashPassword = (password: string): string => {
