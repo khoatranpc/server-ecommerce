@@ -1,4 +1,4 @@
-import { ServicePackage, Status } from "./enum";
+import { Role, ServicePackage, Status } from "./enum";
 import { IObj, IPaginateQuery } from "./types";
 
 export interface UserRegisterInput {
@@ -8,6 +8,7 @@ export interface UserRegisterInput {
   dob: number;
   phoneNumber: string;
   address: string;
+  role: Role;
 }
 
 export interface UserLoginInput {

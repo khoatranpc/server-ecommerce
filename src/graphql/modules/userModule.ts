@@ -12,6 +12,7 @@ import {
   UserLoginInput,
   UserRegisterInput,
 } from "../../graphql-types";
+import { Role } from "../../enum";
 const userModule = (): IModules => {
   return {
     typeDefs: `#graphql
@@ -35,6 +36,7 @@ const userModule = (): IModules => {
                 dob: Float!
                 phoneNumber: String!
                 address: String!
+                role: String
             }
             input UserLoginInput {
               email: String!
@@ -66,6 +68,8 @@ const userModule = (): IModules => {
           const payload: UserRegisterInput = {
             ...input,
           };
+          if (payload.role === Role.admin)
+            throw new GraphQLError("Unknown role!");
           const hashedPassword = hashPassword(payload.password);
           const createdUser = await UserModel.create({
             ...payload,
