@@ -189,7 +189,8 @@ const productModule = (): IModules => {
       Query: {
         [operationsGraphql.getProducts.name]: async (
           __dirname,
-          { input }: IInput<IGetProductsInput>
+          { input }: IInput<IGetProductsInput>,
+          context: IContextGraphQlValue
         ) => {
           const {
             filter = {} as IProductFilterInput,
@@ -199,7 +200,10 @@ const productModule = (): IModules => {
           const { page = 1, limit = 10 } = paginate;
           const query: any = { $and: [] };
 
-          if (filter.status?.length) {
+          if (
+            filter.status?.length &&
+            [Role.admin, Role.shop].includes(context.verifiedToken.role)
+          ) {
             query.$and.push({ status: { $in: filter.status } });
           } else {
             query.$and.push({ status: { $in: [Status.active] } });
