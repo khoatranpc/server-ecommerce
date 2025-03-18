@@ -220,12 +220,19 @@ const productModule = (): IModules => {
           if (filter.keywords && typeof filter.keywords === "string") {
             const sanitizedKeywords = filter.keywords.trim();
             if (sanitizedKeywords.length > 0) {
-              const regex = new RegExp(`\\b${sanitizedKeywords}`, "i");
               query.$and.push({
                 $or: [
-                  { name: { $regex: regex } },
-                  { slug: { $regex: regex } },
-                  { keywords: { $regex: regex } },
+                  { name: { $regex: sanitizedKeywords, $options: "i" } },
+                  {
+                    slug: {
+                      $regex: slugify(`${sanitizedKeywords}`, {
+                        lower: true,
+                        locale: "vi",
+                      }),
+                      $options: "i",
+                    },
+                  },
+                  { keywords: { $regex: sanitizedKeywords, $options: "i" } },
                 ],
               });
             }
@@ -234,7 +241,7 @@ const productModule = (): IModules => {
             const sanitizedSku = filter.sku.trim();
             if (sanitizedSku.length > 0) {
               query.$and.push({
-                sku: { $regex: new RegExp(sanitizedSku, "i") },
+                sku: { $regex: sanitizedSku, $options: "i" },
               });
             }
           }
