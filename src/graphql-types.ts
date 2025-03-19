@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Role, ServicePackage, Status } from "./enum";
 import { IObj, IPaginateQuery } from "./types";
 
@@ -127,4 +128,16 @@ export interface ICreateAPostInput {
   product: String;
   banner: String;
   status: String;
+}
+
+export interface GetCartsInput {
+  userId: string;
+}
+
+export interface InsertToCartInput {
+  shop: Types.ObjectId;
+  product: Types.ObjectId;
+  variant: Types.ObjectId;
+  quantity: Number;
+  userId: Types.ObjectId;
 }

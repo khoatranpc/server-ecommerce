@@ -118,3 +118,24 @@ export interface IComment {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface ICartItem {
+  _id?: Types.ObjectId;
+  product: Types.ObjectId;
+  variant: Types.ObjectId;
+  quantity: number;
+  price: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ICart {
+  _id?: Types.ObjectId;
+  user: Types.ObjectId;
+  items: ICartItem[];
+  totalAmount: number;
+  status: Status;
+  shop: Types.ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

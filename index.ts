@@ -14,6 +14,7 @@ import shopModule from "./src/graphql/modules/shopModule";
 import categoryModule from "./src/graphql/modules/categoryModule";
 import productModule from "./src/graphql/modules/productModule";
 import postModule from "./src/graphql/modules/postModule";
+import cartModule from "./src/graphql/modules/cartModule";
 config();
 
 const mongo_uri = process.env.MONGO_URI;
@@ -28,7 +29,8 @@ const server = new ApolloServer({
     shopModule(),
     categoryModule(),
     productModule(),
-    postModule()
+    postModule(),
+    cartModule()
   ),
 });
 

@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { Collections, Status } from "../enum";
 import { IProduct, IVariant } from "./type.model";
 
-const variantSchema = new Schema<IVariant>(
+export const variantSchema = new Schema<IVariant>(
   {
     name: {
       type: String,

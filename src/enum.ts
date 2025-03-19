@@ -5,6 +5,7 @@ export enum Collections {
   products = "products",
   posts = "posts",
   comments = "comments",
+  carts = "carts",
 }
 
 export enum OperationStatus {
